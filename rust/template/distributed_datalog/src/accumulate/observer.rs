@@ -72,6 +72,11 @@ where
         let _ = self.buffer.take();
         self.data.drain().collect()
     }
+
+    /// Add mock data to the observer. Only used for testing.
+    pub fn add_mock_state(&mut self, mock_data: HashMap<RelId, HashSet<V>>) {
+        self.data = mock_data;
+    }
 }
 
 impl<T, V, E> Observable<T, E> for AccumulatingObserver<T, V, E>

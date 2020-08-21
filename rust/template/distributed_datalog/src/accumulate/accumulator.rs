@@ -55,6 +55,10 @@ where
     /// If a transaction is in progress (i.e., the observer has a non-empty buffer),
     /// returns an error.
     fn clear(&mut self) -> Result<(), &str>;
+
+    /// Adds mock data to the accumulator's observer's state.
+    /// Used for testing.
+    fn add_mock_state(&mut self, mock_data: HashMap<RelId, HashSet<V>>);
 }
 
 /// An Accumulator implementation that can have multiple observers (can be subscribed to more
@@ -106,6 +110,7 @@ where
         trace!("DistributingAccumulator({})::get_current_state()", self.id);
         self.observer.get_current_state()
     }
+
     fn clear_and_return_state(&mut self) -> HashMap<RelId, HashSet<V>> {
         trace!(
             "DistributingAccumulator({})::clear_and_return_state()",
@@ -145,6 +150,10 @@ where
         } else {
             Err("Failed to clear accumulator because transaction is in progress")
         }
+    }
+
+    fn add_mock_state(&mut self, mock_data: HashMap<RelId, HashSet<V>>) {
+        self.observer.add_mock_state(mock_data);
     }
 }
 

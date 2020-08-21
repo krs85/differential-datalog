@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use distributed_datalog::{Addr, DDlogServer, Realization, Sink, Source};
+    use distributed_datalog::{Addr, DDlogServer, Realization, Sink, Source, DistributingAccumulator};
     use server_api_ddlog::api::HDDlog;
     use std::collections::{BTreeSet, HashMap};
     use std::net::{IpAddr, Ipv4Addr, SocketAddr};
@@ -150,5 +150,20 @@ mod tests {
         assert!(realization
             .remove_sink_accumulator(rel_ids, &mut server)
             .is_err());
+    }
+
+    #[test]
+    fn accumulator_to_file_sink() {
+        let mut realization = Realization::<HDDlog>::new();
+
+        let mut server = DDlogServer::new(None, HashMap::new());
+        let mut rel_ids = BTreeSet::new();
+        rel_ids.insert(1);
+        realization.add_sink_accumulator(rel_ids, &mut server).unwrap();
+
+        if let Some(value) = realization._sinks.get_mut(&rel_ids) {
+            let (accumulator, _, _) = value;
+
+        }
     }
 }

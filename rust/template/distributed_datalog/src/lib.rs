@@ -66,6 +66,7 @@ pub mod sources;
 /// A module providing functionality for using d3log with ZooKeeper.
 pub mod zookeeper;
 
+pub use accumulate::DistributingAccumulator;
 pub use instantiate::instantiate;
 pub use instantiate::Realization;
 pub use observe::Observable;
