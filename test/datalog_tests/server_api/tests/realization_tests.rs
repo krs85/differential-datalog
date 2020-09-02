@@ -154,16 +154,24 @@ mod tests {
 
     #[test]
     fn accumulator_to_file_sink() {
+        // Create an empty realization.
         let mut realization = Realization::<HDDlog>::new();
 
+        // Create dummy server and relation set.
         let mut server = DDlogServer::new(None, HashMap::new());
         let mut rel_ids = BTreeSet::new();
         rel_ids.insert(1);
-        realization.add_sink_accumulator(rel_ids, &mut server).unwrap();
 
-        if let Some(value) = realization._sinks.get_mut(&rel_ids) {
-            let (accumulator, _, _) = value;
+        // Add sink accumulator for this relation set to realization with dummy data.
+        realization.add_sink_accumulator_with_testing_data(rel_ids, &mut server).unwrap();
 
-        }
+        // Create a dummy file sink for testing.
+        let file = NamedTempFile::new().unwrap();
+        let sink = Sink::File(PathBuf::from(file.path()));
+         
+        realization.add_sink(&sink, rel_ids.clone(), &mut server).unwrap();
+
+        realization.get_file_sink_record(sink, rel_ids)
+
     }
 }

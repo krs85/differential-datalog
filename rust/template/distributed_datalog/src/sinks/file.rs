@@ -1,5 +1,6 @@
 use std::fs::File as FsFile;
 use std::marker::PhantomData;
+use std::io::Read;
 
 use log::trace;
 use uid::Id;
@@ -35,6 +36,12 @@ impl<C> File<C> {
             file,
             _unused: PhantomData,
         }
+    }
+
+    pub fn get_file_contents(&self) -> String {
+        let mut content = String::new();
+        self.file.read_to_string(&mut content).unwrap();
+        content
     }
 }
 
